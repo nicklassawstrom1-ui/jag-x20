@@ -1,0 +1,41 @@
+:root { --cream:#f6e6b9; --ink:#201811; --wood:#4c2819; --red:#d64228; --gold:#d49d31; }
+* { box-sizing:border-box; }
+body { margin:0; min-height:100vh; overflow-x:hidden; color:#f5f5f5; font-family:Arial, Helvetica, sans-serif; background:#050505; }
+.app-shell { max-width:1400px; margin:auto; padding:28px clamp(16px,4vw,60px) 30px; }
+.masthead { max-width:1500px; margin:auto; text-align:left; text-shadow:none; }
+.eyebrow { margin:0 0 8px; color:#e50914; font-size:.72rem; font-weight:bold; letter-spacing:.18em; text-transform:uppercase; }
+h1 { margin:0; font-size:clamp(2rem,5vw,4.5rem); font-weight:800; letter-spacing:-.05em; color:#fff; text-shadow:none; }
+.tagline,.controls { font-size:.9rem; letter-spacing:.02em; opacity:.72; }
+.store { position:relative; width:100vw; margin:30px calc(50% - 50vw) 18px; max-width:none; padding:50px 0 105px; perspective:1550px; perspective-origin:50% 38%; background:transparent; }
+.store-video-bg { position:fixed; z-index:0; inset:0; overflow:hidden; pointer-events:none; background:#090909; }
+.store-video-bg iframe { position:absolute; left:50%; top:50%; width:max(100vw,177.78vh); height:max(56.25vw,100vh); transform:translate(-50%,-50%); border:0; pointer-events:none; }
+.app-shell { position:relative; z-index:1; }
+.fluorescent { position:absolute; width:62%; height:13px; top:9px; left:19%; background:#ffeac2; box-shadow:0 0 14px 4px #fff0b0,0 0 55px 18px rgba(255,191,91,.25); transform:rotateX(55deg); }
+.shelf { position:relative; z-index:1; display:flex; flex-direction:column; padding:18px 26px 18px 20px; border:22px solid #171516; border-top-width:28px; border-bottom-width:34px; background:rgba(10,10,12,.24); backdrop-filter:blur(7px) saturate(.7); box-shadow:inset 0 0 32px rgba(0,0,0,.72),0 34px 40px rgba(0,0,0,.75); }
+.shelf::before { content:""; position:absolute; z-index:-1; left:-22px; right:-28px; bottom:-86px; height:88px; background:linear-gradient(to right,transparent 0 2%,#080808 2% 3%,#302d2e 3% 7%,#111011 7% 8%,transparent 8% 92%,#080808 92% 93%,#302d2e 93% 97%,#111011 97% 98%,transparent 98%); filter:drop-shadow(0 12px 7px rgba(0,0,0,.8)); }
+.shelf-row { --ledge-depth:18px; position:relative; z-index:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); column-gap:5px; align-items:end; min-height:188px; padding:18px 10px var(--ledge-depth) 10px; overflow:visible; background:linear-gradient(90deg,rgba(0,0,0,.46),rgba(0,0,0,.08) 13%,rgba(0,0,0,.08) 86%,rgba(0,0,0,.46)),repeating-linear-gradient(90deg,rgba(36,33,34,.32) 0 13%,rgba(19,18,19,.22) 13% 26%,rgba(41,38,39,.32) 26% 39%,rgba(21,19,20,.22) 39% 52%); backdrop-filter:blur(3px) saturate(.65); box-shadow:inset 0 14px 19px rgba(0,0,0,.62),inset 0 -7px 10px rgba(0,0,0,.6); }
+.shelf-row:nth-child(2) { --ledge-depth:24px; }.shelf-row:nth-child(3) { --ledge-depth:31px; }.shelf-row:nth-child(4) { --ledge-depth:39px; }
+.shelf-row::before { content:""; position:absolute; z-index:1; left:10px; right:10px; bottom:0; height:calc(var(--ledge-depth) * 1.6); pointer-events:none; clip-path:polygon(4% 0,96% 0,100% 100%,0 100%); background:linear-gradient(to bottom,#0b0a0b 0,#282526 35%,#4a4547 47%,#191718 72%,#030303 100%); box-shadow:0 8px 9px rgba(0,0,0,.9); }
+.shelf-row::after { content:""; position:absolute; z-index:3; left:-4px; right:-4px; bottom:0; height:var(--ledge-depth); pointer-events:none; background:linear-gradient(to bottom,#535052 0 15%,#292628 16% 48%,#0c0b0c 50% 82%,#010101 100%); box-shadow:0 9px 8px rgba(0,0,0,.9); }
+.vhs { position:relative; z-index:2; aspect-ratio:14 / 22; margin-bottom:-3px; border:0; padding:0; overflow:hidden; color:white; text-align:left; cursor:pointer; transform:rotate(var(--tilt)); background-color:transparent; background-position:center; background-size:cover; background-repeat:no-repeat; box-shadow:none; transition:outline-color .12s ease, outline-offset .12s ease; }
+.vhs::before,.vhs::after { display:none; }
+.vhs.test-cover { background:url("assets/thegrave-test-cover.jpeg") center / cover no-repeat !important; }
+.vhs.toy-cover { background-image:url("assets/toystore-cover.jpeg") !important; }
+.vhs.dont-look-cover { background-image:url("assets/dont-look-twice-cover.jpeg") !important; }
+.vhs.test-cover .rating,.vhs.test-cover .art,.vhs.test-cover h3 { display:none; }
+.vhs:hover,.vhs:focus-visible { z-index:4; outline:6px solid #ffd52e; outline-offset:3px; }
+.vhs .rating { font-size:.48rem; letter-spacing:.05em; border:1px solid #fff; padding:2px 3px; display:inline-block; }
+.vhs h3 { position:absolute; left:7px; right:6px; bottom:7px; margin:0; font-family:Georgia,serif; font-size:clamp(.6rem,1.35vw,1.2rem); line-height:.92; text-shadow:1px 2px 2px #000; }
+.vhs .art { position:absolute; width:80%; aspect-ratio:1; top:24%; left:10%; border-radius:50%; opacity:.72; background:var(--art); box-shadow:0 0 24px 10px var(--art); }
+.floor-glow { position:absolute; z-index:-1; width:92%; height:45px; bottom:24px; left:4%; background:radial-gradient(ellipse,rgba(223,133,50,.35),transparent 67%); filter:blur(9px); }
+.controls { text-align:center; margin:0; }
+.movie-dialog { position:fixed; inset:0; width:100vw; max-width:none; height:100vh; max-height:none; margin:0; border:0; padding:clamp(24px,4vw,64px); color:#f5f5f5; grid-template-columns:minmax(190px,.75fr) minmax(240px,1fr) minmax(300px,1.25fr); gap:clamp(18px,2.4vw,36px); align-items:center; overflow:auto; background:#080808 url("assets/blacksilk.jpeg") center / cover no-repeat; box-shadow:none; font-family:Arial,Helvetica,sans-serif; }
+.movie-dialog[open] { display:grid; }.movie-dialog::backdrop { background:transparent; }
+.detail-cover { width:100%; height:auto; max-height:76vh; aspect-ratio:14 / 22; border:0; box-shadow:0 16px 38px rgba(0,0,0,.75); background-color:#111; background-position:center; background-size:cover; background-repeat:no-repeat; }
+.detail-cover.toy-cover { background-image:url("assets/toystore-cover.jpeg") !important; }
+.detail-cover.dont-look-cover { background-image:url("assets/dont-look-twice-cover.jpeg") !important; }
+.movie-dialog .movie-copy h2 { font-family:Arial,Helvetica,sans-serif; font-weight:800; letter-spacing:-.04em; text-transform:none; color:#fff; text-shadow:none; }.movie-copy .year { color:#b3b3b3; font-weight:600; letter-spacing:.04em; }.movie-copy p:not(.eyebrow):not(.year) { font-size:1.04rem; line-height:1.55; color:#ddd; }.film-tagline { margin:18px 0; color:#fff !important; font-size:1.1rem !important; font-weight:600; }.movie-facts { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:13px 24px; margin:22px 0 28px; padding-top:20px; border-top:1px solid #333; }.movie-facts div { min-width:0; }.movie-facts dt { margin-bottom:4px; color:#888; font-size:.67rem; font-weight:bold; letter-spacing:.08em; text-transform:uppercase; }.movie-facts dd { margin:0; color:#eee; font-size:.86rem; line-height:1.35; }.movie-dialog .rent { border:0; border-radius:4px; padding:14px 20px; color:#fff; background:#e50914; box-shadow:none; font-family:Arial,Helvetica,sans-serif; font-size:1rem; font-weight:700; letter-spacing:0; text-transform:none; }
+.movie-copy { min-width:0; overflow:auto; padding-bottom:12px; }
+.movie-copy h2 { margin:.1em 0; font-family:Georgia,serif; font-size:clamp(1.6rem,4vw,3.1rem); }.year { color:#eeb64a; }.rent { border:0; padding:13px 16px; color:#241107; background:#f0b63c; font-weight:bold; cursor:pointer; }.rent span { margin-left:12px; }.close { position:absolute; top:11px; right:14px; border:0; color:var(--cream); background:transparent; font-size:2rem; cursor:pointer; }
+.trailer { position:relative; min-height:min(52vh,560px); overflow:hidden; background:#000; box-shadow:0 16px 38px rgba(0,0,0,.55); }.trailer #trailer-mount { width:100%; height:100%; min-height:inherit; }.trailer iframe { display:block; width:100%; height:100%; min-height:inherit; border:0; }
+@media(max-width:720px) { .store { padding:40px 0 105px; }.shelf { border-width:12px; padding:10px 8px; }.shelf-row { min-height:132px; column-gap:6px; padding:10px 8px var(--ledge-depth); }.movie-dialog { padding:60px 20px 25px; gap:18px; grid-template-columns:120px 1fr; }.detail-cover { width:100%; height:auto; }.trailer { grid-column:1/-1; min-height:160px; } }

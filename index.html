@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Videobutiken 1985</title>
+    <link rel="preconnect" href="https://iframe.mediadelivery.net" crossorigin />
+    <link rel="preconnect" href="https://assets.mediadelivery.net" crossorigin />
+    <link rel="dns-prefetch" href="https://video.bunnycdn.com" />
+    <link rel="stylesheet" href="styles.css?v=frosted-video-2" />
+  </head>
+  <body>
+    <div class="store-video-bg" aria-hidden="true">
+      <iframe src="https://iframe.mediadelivery.net/embed/754178/40fcc5c9-3161-4e97-bc68-a4da518d4f36?autoplay=true&muted=true&loop=true&preload=true&playsinline=true&responsive=true" title="Videobutikens bakgrund" allow="autoplay; fullscreen" loading="eager"></iframe>
+    </div>
+    <main class="app-shell" aria-label="Videobutiken 1985">
+      <header class="masthead">
+        <p class="eyebrow">Öppet varje kväll till 21.00</p>
+        <h1>VIDEOBUTIKEN</h1>
+        <p class="tagline">Välj en film · Tryck Enter för att läsa mer</p>
+      </header>
+
+      <section class="store" aria-label="VHS-hylla">
+        <div class="fluorescent"></div>
+        <div class="shelf" id="shelf" role="grid" aria-label="20 VHS-filmer"></div>
+        <div class="floor-glow"></div>
+      </section>
+
+      <p class="controls">TV-fjärr: piltangenter för att välja · OK/Enter för detaljer · Esc för att stänga</p>
+    </main>
+
+    <dialog id="movie-dialog" class="movie-dialog">
+      <button class="close" aria-label="Stäng detaljvyn">×</button>
+      <div class="detail-cover" id="detail-cover" aria-hidden="true"></div>
+      <section class="movie-copy">
+        <p id="detail-genre" class="eyebrow"></p>
+        <h2 id="detail-title"></h2>
+        <p id="detail-year" class="year"></p>
+        <p id="detail-summary"></p>
+        <p id="detail-tagline" class="film-tagline"></p>
+        <dl class="movie-facts">
+          <div><dt>Originaltitel</dt><dd id="detail-original"></dd></div>
+          <div><dt>Regissör</dt><dd id="detail-director"></dd></div>
+          <div><dt>Medverkande</dt><dd id="detail-cast"></dd></div>
+          <div><dt>Speltid</dt><dd id="detail-runtime"></dd></div>
+          <div><dt>Åldersgräns</dt><dd id="detail-rating"></dd></div>
+          <div><dt>Ljud</dt><dd id="detail-audio"></dd></div>
+        </dl>
+        <button class="rent">Hyr filmen <span id="rent-price">39 kr</span></button>
+      </section>
+      <section class="trailer" aria-label="Trailer">
+        <div id="trailer-mount"></div>
+      </section>
+    </dialog>
+    <script src="https://assets.mediadelivery.net/playerjs/player-0.1.0.min.js"></script>
+    <script src="app.js?v=frosted-video-2"></script>
+  </body>
+</html>
