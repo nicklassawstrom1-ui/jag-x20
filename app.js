@@ -36,7 +36,7 @@ function stopAutoRotate() {
 }
 function startAutoRotate() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || autoRotateTimer || !dialog.open) return;
-  autoRotateTimer = window.setInterval(() => rotateCase(caseAngle + 1), 250);
+  autoRotateTimer = window.setInterval(() => rotateCase(caseAngle + 1.5), 250);
 }
 function resumeAutoRotate() {
   stopAutoRotate();
