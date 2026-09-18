@@ -16,6 +16,125 @@ const catalog = [
   ,{ title: 'Nattens Skräck', image: 'nattens-skrack.jpeg', video: 'b3165a3a-dbb6-4a94-9f11-612dfbb50c6d', genre: 'Svensk skräck', year: '1988', original: 'Nattens Skräck', director: 'VTC Film', cast: 'Eva Berg, Peter Holm, Sara Lind', runtime: '92 min', rating: '15 år', audio: 'PAL · Stereo', price: '35 kr', tagline: 'De kom för spänning. Nu jagar döden dem.', summary: 'En grupp vänner firar natten på Marstrands fästning när en okänd gestalt börjar jaga dem genom de mörka valven.' }
 ];
 const movies = Array.from({ length: 20 }, (_, i) => catalog[i % catalog.length]);
+// Full wrap layout: back | spine | front. Fractions can be tuned per scan.
+catalog.find(movie => movie.title === 'Clown Prank').wrap = {
+  image: 'clown-prank-wrap.png', backEnd: 0.452, spineEnd: 0.550
+};
+catalog.find(movie => movie.title === 'Zombie Invasion').wrap = {
+  image: 'zombie-invasion-wrap.jpg', backEnd: 0.444, spineEnd: 0.556
+};
+const caseStage = document.querySelector('#case-stage');
+const caseObject = document.querySelector('#detail-cover');
+let caseAngle = 0;
+let caseDrag = null;
+let autoRotateTimer = null;
+let autoRotateResumeTimer = null;
+function stopAutoRotate() {
+  window.clearInterval(autoRotateTimer);
+  window.clearTimeout(autoRotateResumeTimer);
+  autoRotateTimer = null;
+}
+function startAutoRotate() {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || autoRotateTimer || !dialog.open) return;
+  autoRotateTimer = window.setInterval(() => rotateCase(caseAngle + 1), 250);
+}
+function resumeAutoRotate() {
+  stopAutoRotate();
+  autoRotateResumeTimer = window.setTimeout(startAutoRotate, 1800);
+}
+function rotateCase(angle, animate = true) {
+  caseAngle = angle;
+  caseObject.classList.toggle('is-dragging', !animate);
+  caseObject.style.transform = `rotateY(${angle}deg)`;
+  const normalized = ((Math.round(angle) % 360) + 360) % 360;
+  caseStage.setAttribute('aria-valuenow', normalized);
+  caseStage.setAttribute('aria-valuetext', `${normalized} grader`);
+  document.querySelectorAll('[data-case-angle]').forEach(button => {
+    button.setAttribute('aria-pressed', String(normalized === Number(button.dataset.caseAngle)));
+  });
+}
+function showCase(movie) {
+  document.querySelector('.case-viewer').classList.remove('is-expanded');
+  document.querySelector('#case-zoom').setAttribute('aria-pressed', 'false');
+  document.querySelector('#case-zoom').textContent = 'Förstora';
+  const front = caseObject.querySelector('.case-front');
+  const back = caseObject.querySelector('.case-back');
+  const spine = caseObject.querySelector('.case-spine');
+  const edge = caseObject.querySelector('.case-edge');
+  const top = caseObject.querySelector('.case-top');
+  const bottom = caseObject.querySelector('.case-bottom');
+  const faces = [front, back, spine, edge, top, bottom];
+  faces.forEach(face => { face.style.backgroundImage = ''; face.style.backgroundSize = ''; face.style.backgroundPosition = ''; });
+  caseObject.classList.toggle('has-wrap', Boolean(movie.wrap));
+  [front, back, spine, edge, top, bottom].forEach(face => { face.style.backgroundImage = `url("assets/${movie.image}")`; });
+  spine.querySelector('span').textContent = movie.title;
+  const copy = caseObject.querySelector('.case-back-copy');
+  copy.replaceChildren();
+  [movie.title, movie.tagline, movie.summary, `${movie.year} · ${movie.runtime} · ${movie.rating}`, movie.audio].forEach((text, index) => {
+    const line = document.createElement(index === 0 ? 'h3' : 'p');
+    line.textContent = text;
+    copy.appendChild(line);
+  });
+  if (movie.wrap) {
+    const { image, backEnd, spineEnd } = movie.wrap;
+    [[back, 0, backEnd], [spine, backEnd, spineEnd], [front, spineEnd, 1]].forEach(([face, start, end]) => {
+      const width = end - start;
+      face.style.backgroundImage = `url("assets/${image}")`;
+      face.style.backgroundSize = `${100 / width}% 100%`;
+      face.style.backgroundPosition = `${start / (1 - width) * 100}% 50%`;
+    });
+    // The far edge is the transparent VHS case side, sized to the full right face.
+    edge.style.backgroundImage = 'url("assets/vhs-right-side2.jpeg")';
+    edge.style.backgroundSize = '100% 100%';
+    edge.style.backgroundPosition = 'center';
+    // Top and bottom use the front artwork instead of an artificial black plastic surface.
+    const frontWidth = 1 - spineEnd;
+    [top, bottom].forEach(face => {
+      face.style.backgroundImage = `url("assets/${image}")`;
+      face.style.backgroundSize = `${100 / frontWidth}% 100%`;
+      face.style.backgroundPosition = '100% 50%';
+    });
+  }
+  rotateCase(22, false);
+}
+caseStage.addEventListener('pointerdown', event => {
+  if (!event.isPrimary || (event.pointerType === 'mouse' && event.button !== 0)) return;
+  stopAutoRotate();
+  caseStage.focus({ preventScroll: true });
+  caseDrag = { id: event.pointerId, x: event.clientX, angle: caseAngle };
+  caseStage.setPointerCapture(event.pointerId);
+});
+document.querySelector('#case-zoom').addEventListener('click', event => {
+  const expanded = document.querySelector('.case-viewer').classList.toggle('is-expanded');
+  event.currentTarget.setAttribute('aria-pressed', String(expanded));
+  event.currentTarget.textContent = expanded ? 'Förminska' : 'Förstora';
+});
+caseStage.addEventListener('pointermove', event => {
+  if (!caseDrag || event.pointerId !== caseDrag.id) return;
+  rotateCase(caseDrag.angle + (event.clientX - caseDrag.x) * 0.65, false);
+});
+function endCaseDrag() {
+  caseDrag = null;
+  caseObject.classList.remove('is-dragging');
+  resumeAutoRotate();
+}
+['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => caseStage.addEventListener(type, endCaseDrag));
+caseStage.addEventListener('keydown', event => {
+  let angle;
+  if (event.key === 'ArrowLeft') angle = caseAngle - 15;
+  if (event.key === 'ArrowRight') angle = caseAngle + 15;
+  if (event.key === 'Enter' || event.key === ' ') angle = Math.round(caseAngle / 180) * 180 + 180;
+  if (event.key === 'Home') angle = 0;
+  if (angle === undefined) return;
+  event.preventDefault();
+  rotateCase(angle);
+  resumeAutoRotate();
+});
+document.querySelectorAll('[data-case-angle]').forEach(button => button.addEventListener('click', () => {
+  const target = Number(button.dataset.caseAngle);
+  rotateCase(caseAngle + ((target - caseAngle + 540) % 360 + 360) % 360 - 180);
+  resumeAutoRotate();
+}));
 const shelf = document.querySelector('#shelf');
 const shelfVideo = document.querySelector('.store-video-bg iframe');
 const dialog = document.querySelector('#movie-dialog');
@@ -86,13 +205,15 @@ window.addEventListener('message', event => {
 });
 function openFilm(index) {
   current = movies[index];
-  const cover = document.querySelector('#detail-cover');
-  cover.style.backgroundImage = `url("assets/${current.image}")`;
+  showCase(current);
   Object.entries(current).forEach(([key, value]) => { if (key in fields) setText(key, value); });
   dialog.showModal();
+  caseStage.focus({ preventScroll: true });
+  startAutoRotate();
   loadTrailer(current);
 }
 function closeFilm() {
+  stopAutoRotate();
   if (dialog.open) dialog.close();
   if (activeFrame) activeFrame.src = 'about:blank';
   trailerMount.replaceChildren();

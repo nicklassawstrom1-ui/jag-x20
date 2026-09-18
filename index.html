@@ -31,7 +31,25 @@
 
     <dialog id="movie-dialog" class="movie-dialog">
       <button class="close" aria-label="Stäng detaljvyn">×</button>
-      <div class="detail-cover" id="detail-cover" aria-hidden="true"></div>
+      <section class="case-viewer" aria-label="Vridbart VHS-fodral">
+        <div class="case-stage" id="case-stage" tabindex="0" role="slider" aria-label="Vrid VHS-fodralet" aria-valuemin="0" aria-valuemax="360" aria-valuenow="0" aria-describedby="case-help">
+          <div class="case-object" id="detail-cover" aria-hidden="true">
+            <div class="case-face case-front"></div>
+            <div class="case-face case-back"><div class="case-back-copy"></div></div>
+            <div class="case-face case-spine"><span></span></div>
+            <div class="case-face case-edge"></div>
+            <div class="case-face case-top"></div>
+            <div class="case-face case-bottom"></div>
+          </div>
+        </div>
+        <div class="case-controls" aria-label="Omslagets sidor">
+          <button type="button" data-case-angle="0">Fram</button>
+          <button type="button" data-case-angle="90">Rygg</button>
+          <button type="button" data-case-angle="180">Bak</button>
+          <button type="button" id="case-zoom" aria-pressed="false">Förstora</button>
+        </div>
+        <p id="case-help">Snurrar automatiskt · Dra för att snurra · ← → vrider · OK vänder</p>
+      </section>
       <section class="movie-copy">
         <p id="detail-genre" class="eyebrow"></p>
         <h2 id="detail-title"></h2>
