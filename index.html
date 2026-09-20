@@ -51,24 +51,31 @@
         </div>
         <p id="case-help">Snurrar automatiskt · Dra för att vrida · Rotera startar igen</p>
       </section>
-      <section class="movie-copy">
-        <p id="detail-genre" class="eyebrow"></p>
-        <h2 id="detail-title"></h2>
-        <p id="detail-year" class="year"></p>
-        <p id="detail-summary"></p>
-        <p id="detail-tagline" class="film-tagline"></p>
-        <dl class="movie-facts">
-          <div><dt>Originaltitel</dt><dd id="detail-original"></dd></div>
-          <div><dt>Regissör</dt><dd id="detail-director"></dd></div>
-          <div><dt>Medverkande</dt><dd id="detail-cast"></dd></div>
-          <div><dt>Speltid</dt><dd id="detail-runtime"></dd></div>
-          <div><dt>Åldersgräns</dt><dd id="detail-rating"></dd></div>
-          <div><dt>Ljud</dt><dd id="detail-audio"></dd></div>
-        </dl>
-        <button class="rent">Hyr filmen <span id="rent-price">39 kr</span></button>
-      </section>
-      <section class="trailer" aria-label="Trailer">
-        <div id="trailer-mount"></div>
+      <section class="detail-right" aria-label="Filmuppgifter och trailer">
+        <header class="detail-heading">
+          <div>
+            <p id="detail-genre" class="eyebrow"></p>
+            <h2 id="detail-title"></h2>
+            <p id="detail-year" class="year"></p>
+          </div>
+          <button class="rent">Hyr filmen <span id="rent-price">39 kr</span></button>
+        </header>
+        <section class="trailer" aria-label="Trailer">
+          <div id="trailer-mount"></div>
+        </section>
+        <section class="movie-copy">
+          <p id="detail-tagline" class="film-tagline"></p>
+          <h3 class="summary-heading">Synopsis</h3>
+          <p id="detail-summary"></p>
+          <dl class="movie-facts">
+            <div><dt>Originaltitel</dt><dd id="detail-original"></dd></div>
+            <div><dt>Regissör</dt><dd id="detail-director"></dd></div>
+            <div><dt>Medverkande</dt><dd id="detail-cast"></dd></div>
+            <div><dt>Speltid</dt><dd id="detail-runtime"></dd></div>
+            <div><dt>Åldersgräns</dt><dd id="detail-rating"></dd></div>
+            <div><dt>Ljud</dt><dd id="detail-audio"></dd></div>
+          </dl>
+        </section>
       </section>
     </dialog>
     <script src="https://assets.mediadelivery.net/playerjs/player-0.1.0.min.js"></script>
