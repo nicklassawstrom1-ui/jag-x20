@@ -1,7 +1,7 @@
 :root { --cream:#f6e6b9; --ink:#201811; --wood:#4c2819; --red:#d64228; --gold:#d49d31; }
 /* Six CSS faces, 21.3:12.9:3.9 cm proportions. No animation loop or WebGL. */
 .case-viewer { min-width:0; text-align:center; }
-.case-stage { --case-width:clamp(300px,30vw,437px); --case-height:calc(var(--case-width) * 21.3 / 12.9); --case-depth:calc(var(--case-width) * 3.9 / 12.9); position:relative; display:flex; justify-content:center; align-items:flex-start; height:calc(var(--case-height) + 48px); perspective:1100px; touch-action:pan-y pinch-zoom; cursor:grab; border-radius:12px; }
+.case-stage { --case-width:min(30vw,437px,calc((100vh - 2 * clamp(24px,4vw,64px) - 84px) * 12.9 / 21.3)); --case-height:calc(var(--case-width) * 21.3 / 12.9); --case-depth:calc(var(--case-width) * 3.9 / 12.9); position:relative; display:flex; justify-content:center; align-items:flex-start; height:calc(var(--case-height) + 48px); perspective:1100px; touch-action:pan-y pinch-zoom; cursor:grab; border-radius:12px; }
 .case-stage:active { cursor:grabbing; }
 .case-stage:focus-visible { outline:2px solid #e5c778; outline-offset:3px; }
 .case-object { position:relative; width:var(--case-width); height:var(--case-height); transform-style:preserve-3d; transition:transform .3s ease-out; }
