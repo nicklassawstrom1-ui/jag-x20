@@ -54,9 +54,9 @@ function rotateCase(angle, animate = true) {
   });
 }
 function showCase(movie) {
-  document.querySelector('.case-viewer').classList.remove('is-expanded');
-  document.querySelector('#case-zoom').setAttribute('aria-pressed', 'false');
-  document.querySelector('#case-zoom').textContent = 'Förstora';
+  document.querySelector('.case-viewer').classList.add('is-expanded');
+  document.querySelector('#case-zoom').setAttribute('aria-pressed', 'true');
+  document.querySelector('#case-zoom').textContent = 'Förminska';
   const front = caseObject.querySelector('.case-front');
   const back = caseObject.querySelector('.case-back');
   const spine = caseObject.querySelector('.case-spine');
@@ -206,6 +206,7 @@ window.addEventListener('message', event => {
 function openFilm(index) {
   current = movies[index];
   showCase(current);
+  document.querySelector('#mobile-detail-title').textContent = `${current.title} (${current.year})`;
   Object.entries(current).forEach(([key, value]) => { if (key in fields) setText(key, value); });
   dialog.showModal();
   caseStage.focus({ preventScroll: true });
