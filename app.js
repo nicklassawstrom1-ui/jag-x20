@@ -126,7 +126,9 @@ const shelfVideo = document.querySelector('.store-video-bg iframe');
 const dialog = document.querySelector('#movie-dialog');
 const trailerMount = document.querySelector('#trailer-mount');
 const trailerPanel = document.querySelector('.trailer');
+const backgroundInput = document.querySelector('#detail-background-input');
 const fields = { genre:'#detail-genre', title:'#detail-title', year:'#detail-year', summary:'#detail-summary', tagline:'#detail-tagline', original:'#detail-original', director:'#detail-director', cast:'#detail-cast', runtime:'#detail-runtime', rating:'#detail-rating', audio:'#detail-audio', price:'#rent-price' };
+let detailBackgroundUrl = null;
 let current;
   if (shelfVideo) {
     const playBackground = () => {
@@ -204,6 +206,10 @@ function closeFilm() {
   if (activeFrame) activeFrame.src = 'about:blank';
   trailerMount.replaceChildren();
   trailerPanel.classList.remove('is-playing');
+  if (detailBackgroundUrl) URL.revokeObjectURL(detailBackgroundUrl);
+  detailBackgroundUrl = null;
+  dialog.style.removeProperty('--detail-background-image');
+  dialog.classList.remove('has-custom-background');
   activeFrame = null;
 }
 
@@ -225,4 +231,12 @@ for (let row = 0; row < 4; row++) {
 shelf.addEventListener('click', e => { const cover = e.target.closest('.vhs'); if (cover) openFilm(Number(cover.dataset.index)); });
 document.querySelector('.close').addEventListener('click', closeFilm);
 dialog.addEventListener('click', e => { if (e.target === dialog) closeFilm(); });
+backgroundInput.addEventListener('change', event => {
+  const file = event.target.files?.[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  if (detailBackgroundUrl) URL.revokeObjectURL(detailBackgroundUrl);
+  detailBackgroundUrl = URL.createObjectURL(file);
+  dialog.style.setProperty('--detail-background-image', `url("${detailBackgroundUrl}")`);
+  dialog.classList.add('has-custom-background');
+});
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && dialog.open) closeFilm(); });
