@@ -28,19 +28,13 @@ const caseObject = document.querySelector('#detail-cover');
 let caseAngle = 0;
 let caseDrag = null;
 let autoRotateTimer = null;
-let autoRotateResumeTimer = null;
 function stopAutoRotate() {
   window.clearInterval(autoRotateTimer);
-  window.clearTimeout(autoRotateResumeTimer);
   autoRotateTimer = null;
 }
 function startAutoRotate() {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || autoRotateTimer || !dialog.open) return;
-  autoRotateTimer = window.setInterval(() => rotateCase(caseAngle + 1.5), 250);
-}
-function resumeAutoRotate() {
-  stopAutoRotate();
-  autoRotateResumeTimer = window.setTimeout(startAutoRotate, 1800);
+  autoRotateTimer = window.setInterval(() => rotateCase(caseAngle + 3), 250);
 }
 function rotateCase(angle, animate = true) {
   caseAngle = angle;
@@ -54,9 +48,6 @@ function rotateCase(angle, animate = true) {
   });
 }
 function showCase(movie) {
-  document.querySelector('.case-viewer').classList.add('is-expanded');
-  document.querySelector('#case-zoom').setAttribute('aria-pressed', 'true');
-  document.querySelector('#case-zoom').textContent = 'Förminska';
   const front = caseObject.querySelector('.case-front');
   const back = caseObject.querySelector('.case-back');
   const spine = caseObject.querySelector('.case-spine');
@@ -104,11 +95,7 @@ caseStage.addEventListener('pointerdown', event => {
   caseDrag = { id: event.pointerId, x: event.clientX, angle: caseAngle };
   caseStage.setPointerCapture(event.pointerId);
 });
-document.querySelector('#case-zoom').addEventListener('click', event => {
-  const expanded = document.querySelector('.case-viewer').classList.toggle('is-expanded');
-  event.currentTarget.setAttribute('aria-pressed', String(expanded));
-  event.currentTarget.textContent = expanded ? 'Förminska' : 'Förstora';
-});
+document.querySelector('#case-rotate').addEventListener('click', startAutoRotate);
 caseStage.addEventListener('pointermove', event => {
   if (!caseDrag || event.pointerId !== caseDrag.id) return;
   rotateCase(caseDrag.angle + (event.clientX - caseDrag.x) * 0.65, false);
@@ -116,7 +103,6 @@ caseStage.addEventListener('pointermove', event => {
 function endCaseDrag() {
   caseDrag = null;
   caseObject.classList.remove('is-dragging');
-  resumeAutoRotate();
 }
 ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(type => caseStage.addEventListener(type, endCaseDrag));
 caseStage.addEventListener('keydown', event => {
@@ -127,13 +113,13 @@ caseStage.addEventListener('keydown', event => {
   if (event.key === 'Home') angle = 0;
   if (angle === undefined) return;
   event.preventDefault();
+  stopAutoRotate();
   rotateCase(angle);
-  resumeAutoRotate();
 });
 document.querySelectorAll('[data-case-angle]').forEach(button => button.addEventListener('click', () => {
   const target = Number(button.dataset.caseAngle);
+  stopAutoRotate();
   rotateCase(caseAngle + ((target - caseAngle + 540) % 360 + 360) % 360 - 180);
-  resumeAutoRotate();
 }));
 const shelf = document.querySelector('#shelf');
 const shelfVideo = document.querySelector('.store-video-bg iframe');
