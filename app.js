@@ -206,7 +206,6 @@ window.addEventListener('message', event => {
 function openFilm(index) {
   current = movies[index];
   showCase(current);
-  document.querySelector('#mobile-detail-title').textContent = `${current.title} (${current.year})`;
   Object.entries(current).forEach(([key, value]) => { if (key in fields) setText(key, value); });
   dialog.showModal();
   caseStage.focus({ preventScroll: true });
