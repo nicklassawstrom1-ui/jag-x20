@@ -139,6 +139,7 @@ let current;
       };
       send('setLoop', true);
       send('setVolume', 0);
+      send('setMuted', true);
       send('play');
     };
   shelfVideo.addEventListener('load', playBackground);
