@@ -126,18 +126,19 @@ const shelfVideo = document.querySelector('.store-video-bg iframe');
 const dialog = document.querySelector('#movie-dialog');
 const trailerMount = document.querySelector('#trailer-mount');
 const trailerPanel = document.querySelector('.trailer');
+const trailerMuteButton = document.querySelector('.trailer-mute');
 const backgroundInput = document.querySelector('#detail-background-input');
 const fields = { genre:'#detail-genre', title:'#detail-title', year:'#detail-year', summary:'#detail-summary', tagline:'#detail-tagline', original:'#detail-original', director:'#detail-director', cast:'#detail-cast', runtime:'#detail-runtime', rating:'#detail-rating', audio:'#detail-audio', price:'#rent-price' };
-// TV-skärmens inre hörn i vr1.jpeg (2752 × 1536). Matcha samma center/cover som bakgrunden.
+// CRT-skärmens 4:3-yta i 801.jpeg (2752 × 1536). Matcha bakgrundens center/cover.
 function alignTrailerToTv() {
   if (!dialog.open) return;
   const scale = Math.max(dialog.clientWidth / 2752, dialog.clientHeight / 1536);
   const imageLeft = (dialog.clientWidth - 2752 * scale) / 2;
   const imageTop = (dialog.clientHeight - 1536 * scale) / 2;
-  trailerPanel.style.setProperty('--tv-left', `${imageLeft + 1671 * scale}px`);
-  trailerPanel.style.setProperty('--tv-top', `${imageTop + 495 * scale}px`);
-  trailerPanel.style.setProperty('--tv-width', `${670 * scale}px`);
-  trailerPanel.style.setProperty('--tv-height', `${369 * scale}px`);
+  dialog.style.setProperty('--tv-left', `${imageLeft + 1725 * scale}px`);
+  dialog.style.setProperty('--tv-top', `${imageTop + 527 * scale}px`);
+  dialog.style.setProperty('--tv-width', `${440 * scale}px`);
+  dialog.style.setProperty('--tv-height', `${330 * scale}px`);
 }
 window.addEventListener('resize', alignTrailerToTv);
 let detailBackgroundUrl = null;
@@ -158,6 +159,8 @@ let current;
   [500, 1500, 3000].forEach(ms => setTimeout(playBackground, ms));
 }
 let activeFrame = null;
+let activePlayer = null;
+let trailerMuted = false;
 const setText = (key, value) => { const el = document.querySelector(fields[key]); if (el) el.textContent = value; };
 
 // Skicka kommandon direkt enligt Player.js-protokollet som Bunny-spelaren använder.
@@ -168,6 +171,19 @@ function sendPlayerCommand(method, value) {
   activeFrame.contentWindow.postMessage(JSON.stringify(message), '*');
   activeFrame.contentWindow.postMessage(message, '*');
 }
+
+function setTrailerMuted(muted) {
+  trailerMuted = muted;
+  trailerMuteButton.setAttribute('aria-pressed', String(muted));
+  const label = muted ? 'Slå på trailerljudet' : 'Stäng av trailerljudet';
+  trailerMuteButton.setAttribute('aria-label', label);
+  trailerMuteButton.title = label;
+  sendPlayerCommand(muted ? 'mute' : 'unmute');
+  if (activePlayer) {
+    try { activePlayer[muted ? 'mute' : 'unmute'](); } catch (_) { /* postMessage ovan är reservväg */ }
+  }
+}
+trailerMuteButton.addEventListener('click', () => setTrailerMuted(!trailerMuted));
 
 function loadTrailer(movie) {
   trailerPanel.classList.remove('is-playing');
@@ -185,11 +201,12 @@ function loadTrailer(movie) {
     sendPlayerCommand('setCurrentTime', 0);
     sendPlayerCommand('setLoop', true);
     sendPlayerCommand('setVolume', 15);
-    sendPlayerCommand('unmute');
+    sendPlayerCommand(trailerMuted ? 'mute' : 'unmute');
     sendPlayerCommand('play');
     try {
       const player = new playerjs.Player(iframe);
-      player.on('ready', () => { player.setCurrentTime(0); player.setVolume(15); player.unmute(); player.play(); });
+      activePlayer = player;
+      player.on('ready', () => { player.setCurrentTime(0); player.setVolume(15); player[trailerMuted ? 'mute' : 'unmute'](); player.play(); });
     } catch (_) { /* autoplay och postMessage används som fallback */ }
   }, { once: true });
 
@@ -206,6 +223,7 @@ window.addEventListener('message', event => {
 });
 function openFilm(index) {
   current = movies[index];
+  setTrailerMuted(false);
   showCase(current);
   Object.entries(current).forEach(([key, value]) => { if (key in fields) setText(key, value); });
   dialog.showModal();
@@ -225,6 +243,7 @@ function closeFilm() {
   dialog.style.removeProperty('--detail-background-image');
   dialog.classList.remove('has-custom-background');
   activeFrame = null;
+  activePlayer = null;
 }
 
 // En webbläsare kan återställa ett öppet dialogelement efter omladdning.
