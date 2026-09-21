@@ -128,6 +128,18 @@ const trailerMount = document.querySelector('#trailer-mount');
 const trailerPanel = document.querySelector('.trailer');
 const backgroundInput = document.querySelector('#detail-background-input');
 const fields = { genre:'#detail-genre', title:'#detail-title', year:'#detail-year', summary:'#detail-summary', tagline:'#detail-tagline', original:'#detail-original', director:'#detail-director', cast:'#detail-cast', runtime:'#detail-runtime', rating:'#detail-rating', audio:'#detail-audio', price:'#rent-price' };
+// TV-skärmens inre hörn i vr1.jpeg (2752 × 1536). Matcha samma center/cover som bakgrunden.
+function alignTrailerToTv() {
+  if (!dialog.open) return;
+  const scale = Math.max(dialog.clientWidth / 2752, dialog.clientHeight / 1536);
+  const imageLeft = (dialog.clientWidth - 2752 * scale) / 2;
+  const imageTop = (dialog.clientHeight - 1536 * scale) / 2;
+  trailerPanel.style.setProperty('--tv-left', `${imageLeft + 1671 * scale}px`);
+  trailerPanel.style.setProperty('--tv-top', `${imageTop + 495 * scale}px`);
+  trailerPanel.style.setProperty('--tv-width', `${670 * scale}px`);
+  trailerPanel.style.setProperty('--tv-height', `${369 * scale}px`);
+}
+window.addEventListener('resize', alignTrailerToTv);
 let detailBackgroundUrl = null;
 let current;
   if (shelfVideo) {
@@ -197,6 +209,7 @@ function openFilm(index) {
   showCase(current);
   Object.entries(current).forEach(([key, value]) => { if (key in fields) setText(key, value); });
   dialog.showModal();
+  alignTrailerToTv();
   caseStage.focus({ preventScroll: true });
   startAutoRotate();
   loadTrailer(current);
