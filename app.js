@@ -135,10 +135,10 @@ function alignTrailerToTv() {
   const scale = Math.max(dialog.clientWidth / 2752, dialog.clientHeight / 1536);
   const imageLeft = (dialog.clientWidth - 2752 * scale) / 2;
   const imageTop = (dialog.clientHeight - 1536 * scale) / 2;
-  dialog.style.setProperty('--tv-left', `${imageLeft + 1725 * scale}px`);
-  dialog.style.setProperty('--tv-top', `${imageTop + 527 * scale}px`);
-  dialog.style.setProperty('--tv-width', `${440 * scale}px`);
-  dialog.style.setProperty('--tv-height', `${330 * scale}px`);
+  dialog.style.setProperty('--tv-left', `${imageLeft + 1717 * scale}px`);
+  dialog.style.setProperty('--tv-top', `${imageTop + 521 * scale}px`);
+  dialog.style.setProperty('--tv-width', `${456 * scale}px`);
+  dialog.style.setProperty('--tv-height', `${342 * scale}px`);
 }
 window.addEventListener('resize', alignTrailerToTv);
 let detailBackgroundUrl = null;
